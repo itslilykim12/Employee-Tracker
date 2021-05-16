@@ -1,6 +1,7 @@
 const mysql = require('mysql2');
 const inquirer = require('inquirer');
 const consoleTable = require('console.table');
+
 //connection to the database
 const connection = mysql.createConnection({
     host: 'localhost',
@@ -12,15 +13,18 @@ const connection = mysql.createConnection({
 //Connects to sql server and database
 connection.connect(function(err){
     if (err) throw err; 
+    console.log("\n Welcome to Employee Tracker Database!\n")
     options();
 });
 
-//prompts users with the lists of options to choose from 
-function options() { 
-    inquirer.prompt({
-        name: 'action',
+//Main options function ()
+function options () { 
+    //Prompts users to choose an option
+    inquirer.prompt(
+        {
         type: ' list',
-        message: 'Welcome to our employee tracker database! What would you like to do?',
+        message: 'What would you like to do?',
+        name: 'option',
         choices: [
             'View all employees',
             'View all departments',
@@ -32,8 +36,9 @@ function options() {
             'Delete an employee',
             'EXIT/QUIT'
         ]
-    }).then(function(answer) {
-        switch (answer.action) {
+    }).then((answer) => {
+        //switch case depending on user option
+        switch (answer.option) {
         case 'View all employees': viewEmployees();
         break;
         case 'View all departments': viewDepartments();
@@ -50,12 +55,36 @@ function options() {
         break;
         case 'Delete an employee': deleteEmployee();
         break;
-        case 'EXIT/QUIT': exitApp();
+        case 'EXIT/QUIT':connection.end();
+        console.log('Have a good day!')
         break;
-        default:
-            break;
+        
         }
     })
+}
+//view all employees database
+function viewEmployees () {
+   
+};
+//View all departments in the database
+function viewDepartments () {
+   
 };
 
+//View all roles in the database
+function viewRoles () {
+   
+};
+//add an employee to the database 
+function addEmployee () {
+   
+}
 
+//add a Role 
+function addRole () {};
+//add department 
+function addDepartment () {};
+//Update an employee role
+function updateRole () {};
+//Delete an employee from database
+function deleteEmployee () {};
