@@ -254,7 +254,7 @@ function updateRole() {
 
 //Delete an employee from database
 function deleteEmployee() {
-    connection.promise().query('SELECT * FROM employee')
+    connection.promise().query('DELETE FROM employee WHERE id = ?')
     .then ((res) => {
         return res[0].map(emp => {
             return {
