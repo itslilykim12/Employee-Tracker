@@ -15,6 +15,11 @@ https://drive.google.com/file/d/14_XI3QVWSQQb85YhKSl3APmoIAlKKc_o/view
 # Sample Image of Assignment 
 ![Snippet of Tables](https://user-images.githubusercontent.com/78708872/118426626-8e627200-b699-11eb-98d4-c369b3bcd1f6.PNG)
 
+# Resources 
+1. Inquirer: https://www.npmjs.com/package/inquirer
+2. Console.table: https://www.npmjs.com/package/console.table
+3. mysql2: https://www.npmjs.com/package/mysql2
+
 
 # Contributions 
 Made by Lily Kim 
