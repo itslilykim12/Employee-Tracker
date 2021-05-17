@@ -1,11 +1,6 @@
 const inquirer = require('inquirer');
 const db = require('./db/connection');
 const consoleTable = require('console.table');
-const util = require('util');
-
-
-
-//connection.query = util.promisify(connection.query);
 
 function options () { 
     //Prompts users to choose an option
@@ -68,7 +63,7 @@ function viewEmployees () {
         if (err) {
             throw err;
         }
-        console.table(res)
+        //console.table(res)
         options();
     }) 
 };
