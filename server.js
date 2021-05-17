@@ -1,7 +1,6 @@
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
 const consoleTable = require('console.table');
-const { connect } = require('./db/connection');
 
 const connection = mysql.createConnection({
     host: 'localhost',
@@ -68,7 +67,7 @@ function options() {
 };
 //View all departments in the database
 function viewDepartments() {
-    const query = 'SELECT * FROM department'
+    const query = 'SELECT * FROM department';
     connection.query(query, (err, res) => {
         if (err) {
             throw err;
@@ -92,7 +91,7 @@ function viewRoles() {
 function viewEmployees() {
     const query = 'SELECT * FROM employee';
     connection.query(query, (err, res) => {
-        if (err) {
+        if (err){
             throw err;
         }
         console.table(res)
@@ -100,8 +99,8 @@ function viewEmployees() {
     })
 };
 //add department 
-function addDepartment () {
-    inquirer.prompt ([
+function addDepartment() {
+    inquirer.prompt([
         {
             type:'input',
             name:'department',
@@ -193,7 +192,7 @@ async function addEmployee() {
             message: 'What is their role?',
             choices: await selectRoles()
         }
-    ]).then(function (res) {
+    ]).then(function(res) {
         let rolesId = res.roles
         
         connection.query('INSERT INTO employee SET?', {
@@ -240,7 +239,7 @@ function updateRole() {
         [ 
             answer.rolesID , 
             answer.employeeListId
-        ],
+        ]
         );
     })
     .then(res => {
