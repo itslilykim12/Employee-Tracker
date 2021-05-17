@@ -1,4 +1,3 @@
-USE tracker;
 
 INSERT INTO department 
 (name)
@@ -10,7 +9,7 @@ VALUES
 ('Finance'), 
 ('Development');
 
- INSERT INTO role (title, salary, department_id)
+ INSERT INTO roles (title, salary, department_id)
  VALUES 
 ('Software Web Developer',90000, 1),
 ('Manager', 80000, 2),
@@ -20,11 +19,11 @@ VALUES
 ('Security Guard', 60000, 6);
 
 INSERT INTO employee 
-(first_name, last_name, role_id, manager_id)
+(first_name, last_name, roles_id, manager_id)
  VALUES 
-('Nick', 'Smith', 1, 456),
+('Nick', 'Smith', 1, NULL),
 ('Hannah', 'Young', 2, 101),
-('Madison', 'Barrett', 3, 225),
+('Madison', 'Barrett', 3, NULL),
 ('Bella', 'Martins', 4, 348),
 ('Maria', 'Lopez', 5, 222),
-('Josh', 'Hall', 6, 990);
+('Josh', 'Hall', 6, NULL);

@@ -1,23 +1,19 @@
-const mysql = require('mysql2');
 const inquirer = require('inquirer');
+const db = require('./db/connection');
+const consoleTable = require('console.table');
+const util = require('util');
 
-//connection to the database
-const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'Summer12@',
-    database: 'tracker'
-});
 
-connection.connect ();
 
-function options() { 
+//connection.query = util.promisify(connection.query);
+
+function options () { 
     //Prompts users to choose an option
     inquirer.prompt([
         {
-        type: ' list',
+        type: 'list',
         message: 'What would you like to do?',
-        name: 'option',
+        name: 'options',
         choices: [
         'View all employees',
         'View all departments',
@@ -30,41 +26,42 @@ function options() {
         'EXIT'
         ]
     }
-]).then((answer) => {
-        //switch case depending on user option
-        switch (answer.option) {
-        case 'View all employees': 
+]).then(answer => {
+        switch (answer.options) {
+            case 'View all employees': 
                 viewEmployees();
-        break;
-        case 'View all departments': 
+                 break;
+            case 'View all departments': 
                 viewDepartments();
-        break;
-        case 'View all roles': 
+                break;
+             case 'View all roles': 
                 viewRoles();
-        break;
-        case 'Add an employee':
+                break;
+            case 'Add an employee':
                  addEmployee();
-        break;
-        case 'Add a department':
+                break;
+            case 'Add a department':
                  addDepartment();
-        break;
-        case 'Add a role': 
+                break;
+            case 'Add a role': 
                 addRole();
-        break;
-        case 'Update an employee role':
+                break;
+            case 'Update an employee role':
                  updateRole();
-        break;
-        case 'Delete an employee': 
+                break;
+            case 'Delete an employee': 
             deleteEmployee();
-        break;
-        case 'EXIT':
+                break;
+            case 'EXIT':
+                exitApp (); 
+                break; 
+
+                default: 
                 connection.end();
-                console.log('Have a good day!')
-        break;
         
         }
-    })
-};
+    });
+}
 //view all employees database
 function viewEmployees () {
     connection.query('SELECT * FROM employee',(err, res) => {
@@ -78,13 +75,16 @@ function viewEmployees () {
 //View all departments in the database
 function viewDepartments () {
     connection.query('SELECT * FROM department', (err, res) => {
-        if (err) {
-            throw err;
+        if (err) throw err;
+        if (res.length > 0) {
+            console.log('\n')
+            console.log(' ** Departments**')
+            console.log('\n')
+            //console.table(res);
         }
-        console.table(res)
         options();
-    })  
-};
+    });
+}
 
 //View all roles in the database
 function viewRoles () {
@@ -92,7 +92,7 @@ function viewRoles () {
         if (err) {
             throw err;
         }
-        console.table(res)
+        //console.table(res)
         options();
     })
    
@@ -113,7 +113,7 @@ function addRole () {
             }
         })
     })
-    .then((department) => {
+    .then((departments) => {
         return inquirer.prompt([
             {
                 type: 'input',
@@ -164,8 +164,79 @@ function addDepartment () {
     });
 }
 //Update an employee role
-function updateRole () {};
+function updateRole () {
+    connection.promise().query('SELECT * FROM employee')
+    .then((res) => {
+        return res [0].map(employee => {
+            return {
+                name: employee.first_name,
+                value: employee.id
+            }
+        })
+    })
+    .then(async (employeeList) => {
+        return inquirer.prompt ([
+            {
+                type: 'list',
+                name: 'employeeListId',
+                choices: employeeList,
+                message: 'Please select the employee you want to update.'
+            },
+            {
+                type: 'list',
+                name: ' roleId',
+                choices: await selectRole (), 
+                message: ' Please select the role.'
+            }
+        ])
+    })
+    .then(answer => {
+        console.log(answer);
+        return connection.promise().query('UPDATE employee SET role_id=? WHERE id=?', [ answer.roleId, answer.employeeListId,],
+         );
+    })
+    .then(res => {
+        console.log('Updated an Employee Successfully.')
+        options();
+    })
+    .catch(err => {
+        throw err;
+    });
+}
 //Delete an employee from database
-function deleteEmployee () {};
+function deleteEmployee () {
+    connection.promise().query ('SELECT * FROM employee')
+    .then((res) => {
+        return res [0].map(dept => {
+            return {
+                name: emp.first_name,
+                value: emp.id
+            }
+        })
+    })
+    .then((employees) => {
+        return inquirer.prompt([
+            {
+                type: 'list',
+                name: 'employeeId',
+                choices: employees,
+                message: 'Please select the employee you want to delete.'
+            }
+        ])
+    })
+    .then(res => {
+        console.log('Employee Deleted Successfully.')
+        options();
+    })
+    .catch(err => {
+        throw err
+    });
+};
+//Start server after DB connection 
+db.connect(err => {
+    if (err) throw err;
+    console.log('Database Connected')
+});
+
 //initialize app 
-options ();
+options();
